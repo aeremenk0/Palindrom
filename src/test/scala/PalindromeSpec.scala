@@ -23,5 +23,23 @@ class PalindromeSpec extends FlatSpec with Matchers {
     Palindrome("aa").size should be(2)
     Palindrome("abba").size should be(3)
     Palindrome("aabaa").size should be(6)
+    Palindrome("aaaa").size should be(8)
+  }
+
+  "Palindrome.apply" should "return the same result as oldApply" in {
+    Palindrome("ab").size should be(Palindrome.oldApply("ab").size)
+    Palindrome("aa").size should be(Palindrome.oldApply("aa").size)
+    Palindrome("abba").size should be(Palindrome.oldApply("abba").size)
+    Palindrome("aabaa").size should be(Palindrome.oldApply("aabaa").size)
+    Palindrome("aaaa").size should be(Palindrome.oldApply("aaaa").size)
+  }
+
+  "Palindrome.checkForPalindroms" should "return list of palindroms" in {
+    Palindrome.checkForPalindroms("ab".toCharArray, 0, 0, Nil).size should be(1)
+    Palindrome.checkForPalindroms("ab".toCharArray, 0, 1, Nil).size should be(0)
+    Palindrome.checkForPalindroms("aa".toCharArray, 0, 1, Nil).size should be(1)
+    Palindrome.checkForPalindroms("ab".toCharArray, 1, 1, Nil).size should be(1)
+    Palindrome.checkForPalindroms("aaaaaaa".toCharArray, 3, 4, Nil).size should be(3)
+    Palindrome.checkForPalindroms("aaaaaaa".toCharArray, 3, 3, Nil).size should be(4)
   }
 }

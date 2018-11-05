@@ -24,8 +24,46 @@ object Palindrome {
     }
   }
 
+
   def apply(s: String): List[String] = {
-    val cs = s.toList
-    gen(List(cs.head), cs.tail)
+    val m = getPalindromsMap(s.toCharArray)
+    build(0, m)
+  }
+
+  def oldApply(s: String): List[String] = {
+        val cs = s.toList
+        gen(List(cs.head), cs.tail)
+  }
+
+  def build(i: Int, m: Map[Int, List[Pali]]) : List[String] = {
+    val x = m.getOrElse(i, List())
+
+    if(x.isEmpty) List("")
+    else {
+      x.flatMap(s => build(s.end, m).map(a => s.text + "|" + a))
+    }
+  }
+
+  case class Pali(start: Int, end: Int, text: String)
+
+  def checkForPalindroms(a: Array[Char], s1: Int, s2: Int, acc: List[Pali]): List[Pali] = {
+    if(s1 < 0 || s2 >= a.size) {
+      acc
+    }
+    else if (a(s1) == a(s2)){
+      val p = Pali(s1, s2+1, a.slice(s1, s2+1).mkString)
+      checkForPalindroms(a, s1-1, s2+1, p::acc)
+    }
+    else {
+      acc
+    }
+  }
+
+  def getPalindromsMap(s: Array[Char]): Map[Int, List[Pali]] = {
+    val r = Range(0, s.size)
+    val pl = r.foldRight(Nil:List[Pali]){(i, acc) =>
+      checkForPalindroms(s, i, i, checkForPalindroms(s, i, i+1, acc))
+    }
+    pl.groupBy(x=>x.start)
   }
 }
