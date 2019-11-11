@@ -1,28 +1,26 @@
 object Palindrome {
-  def isPalindrome(s: List[Char]): Boolean = {
-    def go(a: Array[Char], front: Int, end: Int):Boolean = {
-      if(front >= end ) true
-      else
-        if (a(front) != a(end)) false
-        else
-          go(a, front + 1, end - 1)
-    }
+//  def isPalindrome(s: List[Char]): Boolean = {
+//    def go(a: Array[Char], front: Int, end: Int):Boolean = {
+//      if(front >= end ) true
+//      else
+//        if (a(front) != a(end)) false
+//        else
+//          go(a, front + 1, end - 1)
+//    }
+//
+//    if(s.isEmpty) false
+//    else go(s.toArray, 0, s.length - 1)
+//  }
 
-    if(s.isEmpty)
-      false
-    else
-      go(s.toArray, 0, s.length - 1)
-  }
-
-  def gen(head:List[Char], tail: List[Char]): List[String] = {
-    tail match {
-      case Nil if isPalindrome(head) => List((head).reverse.mkString)
-      case h::t if isPalindrome(head) =>
-        gen(List(h), t).map(s => (head).reverse.mkString + "|" + s.mkString) ++ gen(h :: head, t)
-      case h::t => gen(h :: head, t)
-      case Nil => Nil
-    }
-  }
+//  def gen(head:List[Char], tail: List[Char]): List[String] = {
+//    tail match {
+//      case Nil if isPalindrome(head) => List((head).reverse.mkString)
+//      case h::t if isPalindrome(head) =>
+//        gen(List(h), t).map(s => (head).reverse.mkString + "|" + s.mkString) ++ gen(h :: head, t)
+//      case h::t => gen(h :: head, t)
+//      case Nil => Nil
+//    }
+//  }
 
 
   def apply(s: String): List[String] = {
@@ -30,18 +28,17 @@ object Palindrome {
     build(0, m)
   }
 
-  def oldApply(s: String): List[String] = {
-        val cs = s.toList
-        gen(List(cs.head), cs.tail)
+  def longestPalindrome(s: String): String = {
+    val m = getPalindromsMap(s.toCharArray)
+    val res = build(0, m).filterNot(_ == s)
+    res.maxBy(_.size)
   }
 
   def build(i: Int, m: Map[Int, List[Pali]]) : List[String] = {
     val x = m.getOrElse(i, List())
 
     if(x.isEmpty) List("")
-    else {
-      x.flatMap(s => build(s.end, m).map(a => s.text + "|" + a))
-    }
+    else x.flatMap(s => build(s.end, m).map(a => s.text + a))
   }
 
   case class Pali(start: Int, end: Int, text: String)
